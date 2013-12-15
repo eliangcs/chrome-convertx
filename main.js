@@ -10,12 +10,12 @@ chrome.app.runtime.onLaunched.addListener(function() {
     var height = 300;
 
     chrome.app.window.create('index.html', {
-    id: 'helloWorldID',
-    bounds: {
-        width: width,
-        height: height,
-        left: Math.round((screenWidth-width)/2),
-        top: Math.round((screenHeight-height)/2)
-    }
+        id: 'convertxWinID',
+        bounds: {
+            width: width,
+            height: height,
+            left: Math.round((screenWidth-width)/2),
+            top: Math.round((screenHeight-height)/2)
+        }
     });
 });

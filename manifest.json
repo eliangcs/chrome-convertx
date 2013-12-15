@@ -1,15 +1,20 @@
 {
-    "manifest_version": 2,
     "name": "ConvertX",
-    "version": "0.0.1",
+    "description": "Chinese encoding converter.",
+    "manifest_version": 2,
     "minimum_chrome_version": "23",
-    "icons": {
-        "16": "icon_16.png",
-        "128": "icon_128.png"
-    },
+    "version": "0.0.1",
+    "offline_enabled": true,
     "app": {
         "background": {
             "scripts": ["main.js"]
         }
+    },
+    "permissions" : [
+        { "fileSystem": ["write"] }
+    ],
+    "icons": {
+        "16": "icon_16.png",
+        "128": "icon_128.png"
     }
 }

@@ -1,4 +1,46 @@
+/* global chrome, require */
+
+'use strict';
+
+function showLoading(msg) {
+    $('.status').html('<span class="icon-loading"></span> <span>' + msg + '</span>');
+}
+
+function showStatus(msg) {
+    $('.status').html('<span>' + msg + '</span>');
+}
+
+function loadFile(entry) {
+    showLoading('Loading...');
+
+    entry.file(function(file) {
+        var reader = new FileReader();
+        reader.onerror = function(e) {
+            console.log(e);
+        };
+        reader.onload = function(e) {
+            var str = e.target.result;
+            var text = iconv.decode(str, 'big5');
+            $('#preview-from').text(text);
+            showStatus('');
+        };
+        reader.readAsBinaryString(file);
+    });
+}
+
 var iconv = require('iconv-lite');
+
+$(function() {
+
+    $('.select-file').click(function() {
+        chrome.fileSystem.chooseEntry({}, function(entry) {
+            loadFile(entry);
+        });
+    });
+
+});
+
+
 console.log(iconv);
 
 console.log('big5: ' + iconv.encodingExists('big5'));

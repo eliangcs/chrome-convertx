@@ -3,13 +3,67 @@
 <head>
   <meta charset="utf-8">
   <title>ConvertX</title>
+  <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="style.css">
   <script src="jquery.min.js"></script>
   <script src="bundle.js"></script>
 </head>
 <body>
 
-<button type="button" id="btn-choose">Choose</button>
+<div class="dropzone">
+  <div class="path">Drag and drop or <a href="#">select file</a></div>
+  <div class="nav">
+    <a href="#">Cancel</a>
+    <a href="#">Reselect</a>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-6 from-col">
+    <h4>From</h4>
+    <select class="form-control select-encoding" id="encoding-to">
+      <option value="big5">Big5</option>
+      <option value="gb">GB</option>
+      <option value="utf16be">UTF-16 BE</option>
+      <option value="utf16le">UTF-16 LE</option>
+      <option value="utf8">UTF-8</option>
+    </select>
+    <label class="radio-inline">
+      <input type="radio" name="glyphFrom" value="traditional" checked> Traditional
+    </label>
+    <label class="radio-inline">
+      <input type="radio" name="glyphFrom" value="simplified"> Simplified
+    </label>
+    <textarea class="form-control preview" rows="10" readonly>abc</textarea>
+    <div class="status"><img src="loading.gif"> <span>Saving...</span></div>
+  </div>
+
+  <div class="col-xs-6 to-col">
+    <h4>To</h4>
+    <select class="form-control select-encoding" id="encoding-to">
+      <option value="big5">Big5</option>
+      <option value="gb">GB</option>
+      <option value="utf16be">UTF-16 BE</option>
+      <option value="utf16le">UTF-16 LE</option>
+      <option value="utf8">UTF-8</option>
+    </select>
+    <label class="radio-inline">
+      <input type="radio" name="glyphTo" value="traditional" checked> Traditional
+    </label>
+    <label class="radio-inline">
+      <input type="radio" name="glyphTo" value="simplified"> Simplified
+    </label>
+    <textarea class="form-control preview" rows="10" readonly></textarea>
+    <div class="row">
+      <div class="col-xs-6 save-col-left">
+        <button id="btn-save-as" type="button" class="btn btn-block btn-default">Save as...</button>
+      </div>
+      <div class="col-xs-6 save-col-right">
+        <button id="btn-save" type="button" class="btn btn-block btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>

@@ -1,0 +1,64 @@
+body {
+  padding: 13px;
+  font-size: 13px;
+  background: #ddd;
+}
+
+.dropzone {
+  padding: 23px 5px 0 5px;
+  border: 2px dotted #aaa;
+  text-align: center;
+  height: 70px;
+  margin-bottom: 7px;
+  background: #eee;
+}
+
+h4 {
+  font-weight: bold;
+}
+
+.dropzone .nav {
+  margin-top: 5px;
+  text-align: right;
+}
+
+.dropzone .nav a {
+  margin-left: 5px;
+}
+
+.select-encoding {
+  margin-bottom: 10px;
+  font-size: 13px;
+  padding: 0 5px;
+  line-height: 1em;
+  height: 28px;
+  background: #eee;
+}
+
+.preview {
+  font-size: 13px;
+  padding: 5px;
+  margin: 10px 0;
+  resize: none;
+}
+
+.status {
+  padding-top: 5px;
+  font-size: 15px;
+  text-align: right;
+}
+
+.status img {
+  vertical-align: middle;
+}
+
+.status span {
+  vertical-align: middle;
+}
+
+.save-col-left {
+  padding-right: 4px;
+}
+.save-col-right {
+  padding-left: 4px;
+}

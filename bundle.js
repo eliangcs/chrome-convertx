@@ -11,6 +11,20 @@ function showStatus(msg) {
     $('.status').html('<span>' + msg + '</span>');
 }
 
+function occurrences(string, subString, allowOverlapping){
+    string+=''; subString+='';
+    if(subString.length<=0) return string.length+1;
+
+    var n=0, pos=0;
+    var step=(allowOverlapping)?(1):(subString.length);
+
+    while(true){
+        pos=string.indexOf(subString,pos);
+        if(pos>=0){ n++; pos+=step; } else break;
+    }
+    return(n);
+}
+
 function loadFile(entry) {
     showLoading('Loading...');
 
@@ -20,9 +34,26 @@ function loadFile(entry) {
             console.log(e);
         };
         reader.onload = function(e) {
+            console.log('Loaded');
             var str = e.target.result;
-            var text = iconv.decode(str, 'big5');
+            console.log('Decoding...');
+
+            var textBig5 = iconv.decode(str, 'big5');
+            var textUTF8 = iconv.decode(str, 'utf8');
+            var text, encoding;
+
+            if (occurrences(textBig5, '的') > occurrences(textUTF8, '的')) {
+                text = textBig5;
+                encoding = 'big5';
+            } else {
+                text = textUTF8;
+                encoding = 'utf8';
+            }
+
+            console.log('Decoded');
+            text = text.substring(0, 1000);
             $('#preview-from').text(text);
+            $('#encoding-from').removeAttr('disabled').val(encoding);
             showStatus('');
         };
         reader.readAsBinaryString(file);

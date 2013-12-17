@@ -21,7 +21,7 @@
 <div class="row">
   <div class="col-xs-6 from-col">
     <h4>From</h4>
-    <select class="form-control select-encoding" id="encoding-to">
+    <select class="form-control select-encoding" id="encoding-to" disabled>
       <option value="big5">Big5</option>
       <option value="gb">GB</option>
       <option value="utf16be">UTF-16 BE</option>
@@ -29,18 +29,18 @@
       <option value="utf8">UTF-8</option>
     </select>
     <label class="radio-inline">
-      <input type="radio" name="glyphFrom" value="traditional" checked> Traditional
+      <input type="radio" name="glyphFrom" value="traditional" disabled> Traditional
     </label>
     <label class="radio-inline">
-      <input type="radio" name="glyphFrom" value="simplified"> Simplified
+      <input type="radio" name="glyphFrom" value="simplified" disabled> Simplified
     </label>
-    <textarea class="form-control preview" rows="10" readonly>abc</textarea>
-    <div class="status"><img src="loading.gif"> <span>Saving...</span></div>
+    <textarea class="form-control preview" rows="10" readonly></textarea>
+    <div class="status"><!--<img src="loading.gif"> <span>Saving...</span>--></div>
   </div>
 
   <div class="col-xs-6 to-col">
     <h4>To</h4>
-    <select class="form-control select-encoding" id="encoding-to">
+    <select class="form-control select-encoding" id="encoding-to" disabled>
       <option value="big5">Big5</option>
       <option value="gb">GB</option>
       <option value="utf16be">UTF-16 BE</option>
@@ -48,18 +48,18 @@
       <option value="utf8">UTF-8</option>
     </select>
     <label class="radio-inline">
-      <input type="radio" name="glyphTo" value="traditional" checked> Traditional
+      <input type="radio" name="glyphTo" value="traditional" disabled> Traditional
     </label>
     <label class="radio-inline">
-      <input type="radio" name="glyphTo" value="simplified"> Simplified
+      <input type="radio" name="glyphTo" value="simplified" disabled> Simplified
     </label>
     <textarea class="form-control preview" rows="10" readonly></textarea>
     <div class="row">
       <div class="col-xs-6 save-col-left">
-        <button id="btn-save-as" type="button" class="btn btn-block btn-default">Save as...</button>
+        <button id="btn-save-as" type="button" class="btn btn-block btn-default" disabled>Save as...</button>
       </div>
       <div class="col-xs-6 save-col-right">
-        <button id="btn-save" type="button" class="btn btn-block btn-primary">Save</button>
+        <button id="btn-save" type="button" class="btn btn-block btn-primary" disabled>Save</button>
       </div>
     </div>
   </div>

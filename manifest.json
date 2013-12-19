@@ -11,7 +11,8 @@
         }
     },
     "permissions" : [
-        { "fileSystem": ["write"] }
+        { "fileSystem": ["write"] },
+        "storage"
     ],
     "icons": {
         "16": "icon_16.png",

@@ -3,6 +3,10 @@
 
 'use strict';
 
+// Globals
+var iconv = require('iconv-lite');
+var candidates = {};
+
 function showLoading(msg) {
     $('.status').html('<span class="icon-loading"></span> <span>' + msg + '</span>');
 }
@@ -25,6 +29,37 @@ function occurrences(string, subString, allowOverlapping){
     return(n);
 }
 
+function toGlyph(text, table) {
+    var res = '';
+    var c, orig;
+    for (var i = 0; i < text.length; i++) {
+        orig = text[i];
+        c = table[orig];
+        if (c) {
+            res += c;
+        } else {
+            res += orig;
+        }
+    }
+    return res;
+}
+
+function toTrad(text) {
+    return toGlyph(text, s2t);
+}
+
+function toSimp(text) {
+    return toGlyph(text, t2s);
+}
+
+function convertText(text, callback) {
+    chrome.storage.sync.get('glyph', function(items) {
+        var glyph = items.glyph || 'simp';
+        var convertFunc = glyph === 'simp' ? toSimp : toTrad;
+        callback(convertFunc(text), glyph);
+    });
+}
+
 function loadFile(entry) {
     showStatus('Loading...');
 
@@ -36,7 +71,6 @@ function loadFile(entry) {
         reader.onload = function(e) {
             var str = e.target.result;
 
-            var candidates = {};
             var encodings = ['big5', 'gbk', 'utf8', 'utf16le', 'utf16be'];
             var i, encoding;
             for (i in encodings) {
@@ -58,6 +92,17 @@ function loadFile(entry) {
 
             var text = candidates[bestEncoding].substring(0, 1000);
 
+            chrome.storage.sync.set({ encoding: 'utf8', glyph: 'trad' }, function() {
+                console.log('synced');
+            });
+
+            convertText(text, function(newText, glyph) {
+                $('#preview-to').text(newText);
+                $('#simp').removeAttr('disabled');
+                $('#trad').removeAttr('disabled');
+                $('#' + glyph).attr('checked', true);
+            });
+
             $('#preview-from').text(text);
             $('#encoding-from').removeAttr('disabled').val(bestEncoding);
 
@@ -67,8 +112,6 @@ function loadFile(entry) {
     });
 }
 
-var iconv = require('iconv-lite');
-
 $(function() {
 
     $('.select-file').click(function() {
@@ -76,6 +119,21 @@ $(function() {
             if (entry) {
                 loadFile(entry);
             }
+        });
+    });
+
+    $('#encoding-from').change(function() {
+        var encoding = $(this).val();
+        var text = candidates[encoding].substring(0, 1000);
+        $('#preview-from').text(text);
+    });
+
+    $('input[name="glyph"]').click(function() {
+        var glyph = $('input[name="glyph"]').val();
+        chrome.storage.sync.set({ glyph: glyph }, function() {
+            convertText($('#preview-from').text(), function(newText, glyph) {
+                $('#preview-to').text(newText);
+            });
         });
     });
 

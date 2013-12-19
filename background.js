@@ -11,9 +11,9 @@ chrome.app.runtime.onLaunched.addListener(function() {
 
     chrome.app.window.create('index.html', {
         id: 'convertxWinID',
-        minWidth: 420,
+        minWidth: 450,
         minHeight: 450,
-        maxWidth: 800,
+        maxWidth: 450,
         maxHeight: 450,
         bounds: {
             width: width,

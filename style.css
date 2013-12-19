@@ -42,6 +42,14 @@ h4 {
   resize: none;
 }
 
+#preview-from {
+  height: 230px;
+}
+
+#preview-to {
+  height: 200px;
+}
+
 .status {
   padding-top: 5px;
   font-size: 15px;

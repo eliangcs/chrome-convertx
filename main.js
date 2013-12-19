@@ -25,34 +25,41 @@ function occurrences(string, subString, allowOverlapping){
 }
 
 function loadFile(entry) {
-    showLoading('Loading...');
+    showStatus('Loading...');
 
     entry.file(function(file) {
         var reader = new FileReader();
         reader.onerror = function(e) {
-            console.log(e);
+            showStatus('Failed to load file');
         };
         reader.onload = function(e) {
-            console.log('Loaded');
             var str = e.target.result;
-            console.log('Decoding...');
 
-            var textBig5 = iconv.decode(str, 'big5');
-            var textUTF8 = iconv.decode(str, 'utf8');
-            var text, encoding;
-
-            if (occurrences(textBig5, '的') > occurrences(textUTF8, '的')) {
-                text = textBig5;
-                encoding = 'big5';
-            } else {
-                text = textUTF8;
-                encoding = 'utf8';
+            var candidates = {};
+            var encodings = ['big5', 'gbk', 'utf8', 'utf16le', 'utf16be'];
+            var i, encoding;
+            for (i in encodings) {
+                encoding = encodings[i];
+                candidates[encoding] = iconv.decode(str, encoding);
             }
 
-            console.log('Decoded');
-            text = text.substring(0, 1000);
+            // try to guess the file encoding
+            var bestEncoding;
+            var maxCount = -1;
+            var count;
+            for (i in candidates) {
+                count = occurrences(candidates[i], '的');
+                if (count > maxCount) {
+                    bestEncoding = i;
+                    maxCount = count;
+                }
+            }
+
+            var text = candidates[bestEncoding].substring(0, 1000);
+
             $('#preview-from').text(text);
-            $('#encoding-from').removeAttr('disabled').val(encoding);
+            $('#encoding-from').removeAttr('disabled').val(bestEncoding);
+
             showStatus('');
         };
         reader.readAsBinaryString(file);
@@ -65,7 +72,9 @@ $(function() {
 
     $('.select-file').click(function() {
         chrome.fileSystem.chooseEntry({}, function(entry) {
-            loadFile(entry);
+            if (entry) {
+                loadFile(entry);
+            }
         });
     });
 
@@ -104,8 +113,11 @@ $(function() {
     $('#btn-choose').click(function() {
         console.log('clicked');
         chrome.fileSystem.chooseEntry({ type: 'saveFile' }, function(entry, fileEntries) {
-            console.log(entry);
-            console.log(fileEntries);
+
+            if (entry === undefined) {
+                showStatus('');
+                return;
+            }
 
             entry.file(function(file) {
                 var reader = new FileReader();

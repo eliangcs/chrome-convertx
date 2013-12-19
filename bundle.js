@@ -26,34 +26,41 @@ function occurrences(string, subString, allowOverlapping){
 }
 
 function loadFile(entry) {
-    showLoading('Loading...');
+    showStatus('Loading...');
 
     entry.file(function(file) {
         var reader = new FileReader();
         reader.onerror = function(e) {
-            console.log(e);
+            showStatus('Failed to load file');
         };
         reader.onload = function(e) {
-            console.log('Loaded');
             var str = e.target.result;
-            console.log('Decoding...');
 
-            var textBig5 = iconv.decode(str, 'big5');
-            var textUTF8 = iconv.decode(str, 'utf8');
-            var text, encoding;
-
-            if (occurrences(textBig5, '的') > occurrences(textUTF8, '的')) {
-                text = textBig5;
-                encoding = 'big5';
-            } else {
-                text = textUTF8;
-                encoding = 'utf8';
+            var candidates = {};
+            var encodings = ['big5', 'gbk', 'utf8', 'utf16le', 'utf16be'];
+            var i, encoding;
+            for (i in encodings) {
+                encoding = encodings[i];
+                candidates[encoding] = iconv.decode(str, encoding);
             }
 
-            console.log('Decoded');
-            text = text.substring(0, 1000);
+            // try to guess the file encoding
+            var bestEncoding;
+            var maxCount = -1;
+            var count;
+            for (i in candidates) {
+                count = occurrences(candidates[i], '的');
+                if (count > maxCount) {
+                    bestEncoding = i;
+                    maxCount = count;
+                }
+            }
+
+            var text = candidates[bestEncoding].substring(0, 1000);
+
             $('#preview-from').text(text);
-            $('#encoding-from').removeAttr('disabled').val(encoding);
+            $('#encoding-from').removeAttr('disabled').val(bestEncoding);
+
             showStatus('');
         };
         reader.readAsBinaryString(file);
@@ -66,7 +73,9 @@ $(function() {
 
     $('.select-file').click(function() {
         chrome.fileSystem.chooseEntry({}, function(entry) {
-            loadFile(entry);
+            if (entry) {
+                loadFile(entry);
+            }
         });
     });
 
@@ -105,8 +114,11 @@ $(function() {
     $('#btn-choose').click(function() {
         console.log('clicked');
         chrome.fileSystem.chooseEntry({ type: 'saveFile' }, function(entry, fileEntries) {
-            console.log(entry);
-            console.log(fileEntries);
+
+            if (entry === undefined) {
+                showStatus('');
+                return;
+            }
 
             entry.file(function(file) {
                 var reader = new FileReader();
@@ -572,6 +584,8 @@ var iconv = module.exports = {
         binary: "internal",
         ascii: "internal",
         base64: "internal",
+        utf16le: "internal",
+        utf16be: "internal",
 
         // Codepage single-byte encodings.
         singlebyte: function(options) {
@@ -860,6 +874,14 @@ Buffer.byteLength = function (str, encoding) {
     case 'base64':
       return base64ToBytes(str).length
 
+    case 'ucs2':
+    case 'ucs-2':
+    case 'utf16le':
+    case 'utf-16le':
+    case 'utf16be':
+    case 'utf-16be':
+      return str.length * 2
+
     default:
       throw new Error('Unknown encoding')
   }
@@ -949,6 +971,16 @@ function _base64Write (buf, string, offset, length) {
   return Buffer._charsWritten = blitBuffer(base64ToBytes(string), buf, offset, length)
 }
 
+function _utf16leWrite (buf, string, offset, length) {
+  var bytes, pos
+  return Buffer._charsWritten = blitBuffer(utf16leToBytes(string), buf, offset, length)
+}
+
+function _utf16beWrite (buf, string, offset, length) {
+  var bytes, pos
+  return Buffer._charsWritten = blitBuffer(utf16beToBytes(string), buf, offset, length)
+}
+
 function BufferWrite (string, offset, length, encoding) {
   // Support both (string, offset, length, encoding)
   // and the legacy (string, encoding, offset, length)
@@ -993,6 +1025,16 @@ function BufferWrite (string, offset, length, encoding) {
     case 'base64':
       return _base64Write(this, string, offset, length)
 
+    case 'ucs2':
+    case 'ucs-2':
+    case 'utf16le':
+    case 'utf-16le':
+      return _utf16leWrite(this, string, offset, length)
+
+    case 'utf16be':
+    case 'utf-16be':
+      return _utf16beWrite(this, string, offset, length)
+
     default:
       throw new Error('Unknown encoding')
   }
@@ -1034,7 +1076,11 @@ function BufferToString (encoding, start, end) {
     case 'ucs-2':
     case 'utf16le':
     case 'utf-16le':
-      return _ucs2Slice(self, start, end)
+      return _utf16leSlice(self, start, end)
+
+    case 'utf16be':
+    case 'utf-16be':
+      return _utf16beSlice(self, start, end)
 
     default:
       throw new Error('Unknown encoding')
@@ -1079,15 +1125,6 @@ function BufferCopy (target, target_start, start, end) {
   // copy!
   for (var i = 0; i < end - start; i++)
     target[i + target_start] = this[i + start]
-}
-
-function _ucs2Slice (buf, start, end) {
-  var bytes = buf.slice(start, end)
-  var res = ''
-  for (var i = 0; i < bytes.length; i += 2) {
-    res += String.fromCharCode(bytes[i] + bytes[i+1] * 256)
-  }
-  return res
 }
 
 function _base64Slice (buf, start, end) {
@@ -1137,6 +1174,24 @@ function _hexSlice (buf, start, end) {
     out += toHex(buf[i])
   }
   return out
+}
+
+function _utf16leSlice (buf, start, end) {
+  var bytes = buf.slice(start, end)
+  var res = ''
+  for (var i = 0; i < bytes.length; i += 2) {
+    res += String.fromCharCode(bytes[i] + bytes[i+1] * 256)
+  }
+  return res
+}
+
+function _utf16beSlice (buf, start, end) {
+  var bytes = buf.slice(start, end)
+  var res = ''
+  for (var i = 0; i < bytes.length; i += 2) {
+    res += String.fromCharCode(bytes[i] * 256 + bytes[i+1])
+  }
+  return res
 }
 
 // TODO: add test that modifying the new buffer slice will modify memory in the
@@ -1830,6 +1885,34 @@ function asciiToBytes (str) {
   return byteArray
 }
 
+function utf16leToBytes (str) {
+  var c, hi, lo
+  var byteArray = []
+  for (var i = 0; i < str.length; i++) {
+    c = str.charCodeAt(i)
+    hi = c >> 8
+    lo = c % 256
+    byteArray.push(lo)
+    byteArray.push(hi)
+  }
+
+  return byteArray
+}
+
+function utf16beToBytes (str) {
+  var c, hi, lo
+  var byteArray = []
+  for (var i = 0; i < str.length; i++) {
+    c = str.charCodeAt(i)
+    hi = c >> 8
+    lo = c % 256
+    byteArray.push(hi)
+    byteArray.push(lo)
+  }
+
+  return byteArray
+}
+
 function base64ToBytes (str) {
   return require('base64-js').toByteArray(str)
 }
@@ -1901,7 +1984,7 @@ module.exports=require('PcZj9L');
 
 	function b64ToByteArray(b64) {
 		var i, j, l, tmp, placeHolders, arr;
-	
+
 		if (b64.length % 4 > 0) {
 			throw 'Invalid string. Length must be a multiple of 4';
 		}

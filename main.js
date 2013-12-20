@@ -31,6 +31,20 @@ function updateGlyphRadios(encoding, glyph) {
     }
 }
 
+function handleDragOver(evt) {
+    evt.stopPropagation();
+    evt.preventDefault();
+    console.log('drag');
+}
+
+function handleDrop(evt) {
+    evt.stopPropagation();
+    evt.preventDefault();
+
+    var files = evt.dataTransfer.files;
+    console.log(files);
+}
+
 function initUI() {
     chrome.storage.sync.get(['encoding', 'glyph'], function(items) {
         var encoding = items.encoding || 'utf8';
@@ -41,6 +55,10 @@ function initUI() {
     });
 
     setPath();
+
+    var dropzone = document.getElementById('dropzone');
+    dropzone.addEventListener('dragover', handleDragOver, false);
+    dropzone.addEventListener('drop', handleDrop, false);
 
     // translate
     $('.gettext').each(function() {

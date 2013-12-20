@@ -4,7 +4,7 @@ body {
   background: #ddd;
 }
 
-.dropzone {
+#dropzone {
   padding: 23px 5px 0 5px;
   border: 2px dotted #aaa;
   text-align: center;

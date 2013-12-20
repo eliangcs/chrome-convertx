@@ -1277,10 +1277,6 @@ function BufferCopy (target, target_start, start, end) {
     target[i + target_start] = this[i + start]
 }
 
-function _ucs2Slice (buf, start, end) {
-  return _utf8Slice(buf, start, end)
-}
-
 function _base64Slice (buf, start, end) {
   var bytes = buf.slice(start, end)
   return require('base64-js').fromByteArray(bytes)

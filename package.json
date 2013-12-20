@@ -1,0 +1,29 @@
+{
+  "name": "chrome-convertx",
+  "version": "0.0.1",
+  "description": "Chinese encoding converter",
+  "main": "main.js",
+  "dependencies": {
+    "iconv-lite": "~0.2.11"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-contrib-uglify": "~0.2.7",
+    "grunt-contrib-compress": "~0.5.3",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-shell": "~0.6.1"
+  },
+  "scripts": {
+    "test": "grunt"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/eliangcs/chrome-convertx.git"
+  },
+  "author": "Chang-Hung Liang <eliang.cs@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/eliangcs/chrome-convertx/issues"
+  },
+  "homepage": "https://github.com/eliangcs/chrome-convertx"
+}

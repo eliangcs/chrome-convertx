@@ -35,11 +35,19 @@ h4 {
   background: #eee;
 }
 
+.select-encoding:disabled {
+  color: #888;
+}
+
 .preview {
   font-size: 13px;
   padding: 5px;
   margin: 10px 0;
   resize: none;
+}
+
+.preview.unicode {
+  background: #ffd;
 }
 
 #preview-from {

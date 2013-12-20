@@ -1,14 +1,42 @@
-/* global chrome, require */
+/* global $, chrome, require, s2t, t2s */
 
 'use strict';
 
 // Globals
 var iconv = require('iconv-lite');
 var candidates = {};
+var curEncoding = 'utf8';
+var curGlyph = 'trad';
 
-function showLoading(msg) {
-    $('.status').html('<span class="icon-loading"></span> <span>' + msg + '</span>');
+function updateGlyphRadios(encoding, glyph) {
+    var $glyph = $('input[name="glyph"]');
+    if (encoding === 'big5') {
+        $('#trad').prop('checked', true);
+        $glyph.attr('disabled', true);
+    } else if (encoding === 'gbk') {
+        $('#simp').prop('checked', true);
+        $glyph.attr('disabled', true);
+    } else {
+        if (glyph) {
+            $('#' + glyph).prop('checked', true);
+        }
+        $glyph.attr('disabled', false);
+    }
 }
+
+function initUI() {
+    chrome.storage.sync.get(['encoding', 'glyph'], function(items) {
+        var encoding = items.encoding || 'utf8';
+        var glyph = items.glyph || 'trad';
+
+        $('#encoding-to').val(encoding);
+        updateGlyphRadios(encoding, glyph);
+    });
+}
+
+/*function showLoading(msg) {
+    $('.status').html('<span class="icon-loading"></span> <span>' + msg + '</span>');
+}*/
 
 function showStatus(msg) {
     $('.status').html('<span>' + msg + '</span>');
@@ -28,7 +56,8 @@ function occurrences(string, subString, allowOverlapping){
     return(n);
 }
 
-function toGlyph(text, table) {
+function toGlyph(text, glyph) {
+    var table = glyph === 'simp' ? t2s : s2t;
     var res = '';
     var c, orig;
     for (var i = 0; i < text.length; i++) {
@@ -43,20 +72,8 @@ function toGlyph(text, table) {
     return res;
 }
 
-function toTrad(text) {
-    return toGlyph(text, s2t);
-}
-
-function toSimp(text) {
-    return toGlyph(text, t2s);
-}
-
-function convertText(text, callback) {
-    chrome.storage.sync.get('glyph', function(items) {
-        var glyph = items.glyph || 'simp';
-        var convertFunc = glyph === 'simp' ? toSimp : toTrad;
-        callback(convertFunc(text), glyph);
-    });
+function isUnicode(encoding) {
+    return encoding.indexOf('utf') >= 0;
 }
 
 function loadFile(entry) {
@@ -91,19 +108,35 @@ function loadFile(entry) {
 
             var text = candidates[bestEncoding].substring(0, 1000);
 
-            chrome.storage.sync.set({ encoding: 'utf8', glyph: 'trad' }, function() {
-                console.log('synced');
+            chrome.storage.sync.get('glyph', function(items) {
+                var glyph = items.glyph || 'simp';
+                var newText = toGlyph(text, glyph);
+                var $previewTo = $('#preview-to');
+                $previewTo.val(newText);
+
+                var encodingTo = $('#encoding-to').val();
+                if (isUnicode(encodingTo)) {
+                    $previewTo.addClass('unicode');
+                } else {
+                    $previewTo.removeClass('unicode');
+                }
+
+                updateGlyphRadios(encodingTo);
             });
 
-            convertText(text, function(newText, glyph) {
-                $('#preview-to').text(newText);
-                $('#simp').removeAttr('disabled');
-                $('#trad').removeAttr('disabled');
-                $('#' + glyph).attr('checked', true);
-            });
+            var $previewFrom = $('#preview-from');
+            $previewFrom.val(text);
+            if (isUnicode(bestEncoding)) {
+                $previewFrom.addClass('unicode');
+            } else {
+                $previewFrom.removeClass('unicode');
+            }
 
-            $('#preview-from').text(text);
             $('#encoding-from').removeAttr('disabled').val(bestEncoding);
+            $('#encoding-to').removeAttr('disabled');
+            $('#trad').removeAttr('disabled');
+            $('#simp').removeAttr('disabled');
+            $('#save-as').removeAttr('disabled');
 
             showStatus('');
         };
@@ -112,6 +145,8 @@ function loadFile(entry) {
 }
 
 $(function() {
+
+    initUI();
 
     $('.select-file').click(function() {
         chrome.fileSystem.chooseEntry({}, function(entry) {
@@ -124,16 +159,38 @@ $(function() {
     $('#encoding-from').change(function() {
         var encoding = $(this).val();
         var text = candidates[encoding].substring(0, 1000);
-        $('#preview-from').text(text);
+        $('#preview-from').val(text);
+
+        var $preview = $('#preview-from');
+        if (isUnicode(encoding)) {
+            $preview.addClass('unicode');
+        } else {
+            $preview.removeClass('unicode');
+        }
+    });
+
+    $('#encoding-to').change(function() {
+        var encoding = $(this).val();
+        chrome.storage.sync.set({ encoding: encoding });
+
+        updateGlyphRadios(encoding);
+
+        var $preview = $('#preview-to');
+        if (isUnicode(encoding)) {
+            $preview.addClass('unicode');
+        } else {
+            $preview.removeClass('unicode');
+        }
     });
 
     $('input[name="glyph"]').click(function() {
-        var glyph = $('input[name="glyph"]').val();
-        chrome.storage.sync.set({ glyph: glyph }, function() {
-            convertText($('#preview-from').text(), function(newText, glyph) {
-                $('#preview-to').text(newText);
-            });
-        });
+        var glyph = $('input[name="glyph"]:checked').val();
+        console.log('Glyph: ' + glyph);
+        var text = $('#preview-from').val();
+        text = toGlyph(text, glyph);
+        $('#preview-to').val(text);
+
+        chrome.storage.sync.set({ glyph: glyph });
     });
 
 });

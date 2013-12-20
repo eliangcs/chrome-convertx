@@ -32,6 +32,15 @@ function initUI() {
         $('#encoding-to').val(encoding);
         updateGlyphRadios(encoding, glyph);
     });
+
+    setPath();
+}
+
+function clearUI() {
+    $('.preview').val('');
+    $('select').attr('disabled', true);
+    $('input').attr('disabled', true);
+    setPath();
 }
 
 /*function showLoading(msg) {
@@ -76,8 +85,20 @@ function isUnicode(encoding) {
     return encoding.indexOf('utf') >= 0;
 }
 
+function setPath(path) {
+    if (path) {
+        $('.path').text(path);
+        $('.nav').show();
+    } else {
+        $('.path').html('Drag and drop or <a href="#" class="select-file">select file</a>');
+        $('.nav').hide();
+    }
+}
+
 function loadFile(entry) {
     showStatus('Loading...');
+
+    chrome.fileSystem.getDisplayPath(entry, setPath);
 
     entry.file(function(file) {
         var reader = new FileReader();
@@ -148,7 +169,9 @@ $(function() {
 
     initUI();
 
-    $('.select-file').click(function() {
+    var $doc = $(document);
+
+    $doc.on('click', '.select-file', function() {
         chrome.fileSystem.chooseEntry({}, function(entry) {
             if (entry) {
                 loadFile(entry);
@@ -156,6 +179,8 @@ $(function() {
             }
         });
     });
+
+    $('.clear').click(clearUI);
 
     $('#encoding-from').change(function() {
         var encoding = $(this).val();

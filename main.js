@@ -5,6 +5,7 @@
 // Globals
 var iconv = require('iconv-lite');
 var candidates = {};
+var filename = null;
 
 function updateGlyphRadios(encoding, glyph) {
     var $glyph = $('input[name="glyph"]');
@@ -150,6 +151,7 @@ $(function() {
         chrome.fileSystem.chooseEntry({}, function(entry) {
             if (entry) {
                 loadFile(entry);
+                filename = entry.name;
             }
         });
     });
@@ -183,12 +185,36 @@ $(function() {
 
     $('input[name="glyph"]').click(function() {
         var glyph = $('input[name="glyph"]:checked').val();
-        console.log('Glyph: ' + glyph);
         var text = $('#preview-from').val();
         text = toGlyph(text, glyph);
         $('#preview-to').val(text);
 
         chrome.storage.sync.set({ glyph: glyph });
+    });
+
+    $('#save-as').click(function() {
+        chrome.fileSystem.chooseEntry({ type: 'saveFile', suggestedName: filename }, function(entry) {
+            if (!entry) {
+                return;
+            }
+
+            var encodingFrom = $('#encoding-from').val();
+            var encodingTo = $('#encoding-to').val();
+            var glyph = $('input[name="glyph"]:checked').val();
+
+            var text = toGlyph(candidates[encodingFrom], glyph);
+            var buf = iconv.encode(text, encodingTo);
+
+            var blob = new Blob([buf], { type: 'text/plain' });
+            entry.createWriter(function(writer) {
+                writer.truncate(blob.size);
+                waitForIO(writer, function() {
+                    writer.seek(0);
+                    writer.write(blob);
+                });
+            });
+
+        });
     });
 
 });

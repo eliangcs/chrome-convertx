@@ -27,18 +27,34 @@ module.exports = function(grunt) {
             }
         },
 
+        htmlmin: {
+            build: {
+                options: {
+                    removeComments: true,
+                    collapseWhitespace: true
+                },
+                files: { 'build/index.html': 'index.html' }
+            }
+        },
+
+        cssmin: {
+            build: {
+                files: { 'build/style.css': ['style.css'] }
+            }
+        },
+
         compress: {
             dist: {
                 options: {
-                    archive: 'dist/<%= pkg.name %>-<%= pkg.version %>.crx',
+                    archive: 'dist/<%= pkg.name %>-<%= pkg.version %>.zip',
                     mode: 'zip'
                 },
                 files: [
                     { cwd: 'build/', src: ['**'], dest: '', expand: true },
                     {
                         src: [
+                            '_locales/**',
                             'bootstrap.min.css',
-                            'style.css',
                             'jquery.min.js',
                             'manifest.json',
                             'icon_16.png',
@@ -53,10 +69,14 @@ module.exports = function(grunt) {
 
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-compress');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.loadNpmTasks('grunt-contrib-htmlmin');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-shell');
 
     // Default task(s).
-    grunt.registerTask('default', ['clean', 'shell', 'uglify', 'compress']);
+    grunt.registerTask('default', [
+        'clean', 'shell:browserify', 'uglify', 'htmlmin', 'cssmin', 'compress'
+    ]);
 
 };

@@ -36,10 +36,12 @@ function initUI() {
 }
 
 function clearUI() {
-    $('.preview').val('');
+    $('.preview').removeClass('unicode').val('');
     $('select').attr('disabled', true);
     $('input').attr('disabled', true);
+    $('#save-as').attr('disabled', true);
     setPath();
+    showStatus('');
 }
 
 /*function showLoading(msg) {
@@ -257,6 +259,7 @@ $(function() {
                 waitForIO(writer, function() {
                     writer.seek(0);
                     writer.write(blob);
+                    showStatus('Saved!');
                 });
             });
 

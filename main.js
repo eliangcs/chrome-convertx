@@ -5,20 +5,18 @@
 // Globals
 var iconv = require('iconv-lite');
 var candidates = {};
-var curEncoding = 'utf8';
-var curGlyph = 'trad';
 
 function updateGlyphRadios(encoding, glyph) {
     var $glyph = $('input[name="glyph"]');
     if (encoding === 'big5') {
-        $('#trad').prop('checked', true);
+        $('#trad').prop('checked', true).trigger('click');
         $glyph.attr('disabled', true);
     } else if (encoding === 'gbk') {
-        $('#simp').prop('checked', true);
+        $('#simp').prop('checked', true).trigger('click');
         $glyph.attr('disabled', true);
     } else {
         if (glyph) {
-            $('#' + glyph).prop('checked', true);
+            $('#' + glyph).prop('checked', true).trigger('click');
         }
         $glyph.attr('disabled', false);
     }

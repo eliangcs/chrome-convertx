@@ -1,0 +1,41 @@
+{
+    "dragAndDrop": {
+        "message": "拖曳文件进来或"
+    },
+    "selectFile": {
+        "message": "选定文件"
+    },
+    "loading": {
+        "message": "载入中..."
+    },
+    "loadFileFailed": {
+        "message": "文件载入失败"
+    },
+    "saved": {
+        "message": "保存成功！"
+    },
+    "saveFileFailed": {
+        "message": "文件保存失败"
+    },
+    "clear": {
+        "message": "清除"
+    },
+    "reselect": {
+        "message": "重选"
+    },
+    "from": {
+        "message": "来源"
+    },
+    "to": {
+        "message": "目标"
+    },
+    "traditional": {
+        "message": "繁体"
+    },
+    "simplified": {
+        "message": "简体"
+    },
+    "saveAs": {
+        "message": "另存为..."
+    }
+}

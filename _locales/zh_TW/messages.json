@@ -1,0 +1,41 @@
+{
+    "dragAndDrop": {
+        "message": "拖曳檔案進來或"
+    },
+    "selectFile": {
+        "message": "選取檔案"
+    },
+    "loading": {
+        "message": "載入中..."
+    },
+    "loadFileFailed": {
+        "message": "檔案載入失敗"
+    },
+    "saved": {
+        "message": "儲存成功！"
+    },
+    "saveFileFailed": {
+        "message": "存檔失敗"
+    },
+    "clear": {
+        "message": "清除"
+    },
+    "reselect": {
+        "message": "重選"
+    },
+    "from": {
+        "message": "來源"
+    },
+    "to": {
+        "message": "目標"
+    },
+    "traditional": {
+        "message": "繁體"
+    },
+    "simplified": {
+        "message": "簡體"
+    },
+    "saveAs": {
+        "message": "另存新檔..."
+    }
+}

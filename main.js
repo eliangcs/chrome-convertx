@@ -1,4 +1,4 @@
-/* global $, chrome, require, s2t, t2s */
+/* global $, chrome, console, require, s2t, t2s */
 
 'use strict';
 
@@ -6,6 +6,14 @@
 var iconv = require('iconv-lite');
 var candidates = {};
 var filename = null;
+
+function gettext(msg, args) {
+    var text = chrome.i18n.getMessage(msg, args);
+    if (text) {
+        return text;
+    }
+    return msg;
+}
 
 function updateGlyphRadios(encoding, glyph) {
     var $glyph = $('input[name="glyph"]');
@@ -33,6 +41,12 @@ function initUI() {
     });
 
     setPath();
+
+    // translate
+    $('.gettext').each(function() {
+        var $this = $(this);
+        $this.text(gettext($this.text()));
+    });
 }
 
 function clearUI() {
@@ -91,20 +105,20 @@ function setPath(path) {
         $('.path').text(path);
         $('.nav').show();
     } else {
-        $('.path').html('Drag and drop or <a href="#" class="select-file">select file</a>');
+        $('.path').html(gettext('dragAndDrop') + '<a href="#" class="select-file">' + gettext('selectFile') + '</a>');
         $('.nav').hide();
     }
 }
 
 function loadFile(entry) {
-    showStatus('Loading...');
+    showStatus(gettext('loading'));
 
     chrome.fileSystem.getDisplayPath(entry, setPath);
 
     entry.file(function(file) {
         var reader = new FileReader();
         reader.onerror = function(e) {
-            showStatus('Failed to load file');
+            showStatus(gettext('loadFileFailed'));
         };
         reader.onload = function(e) {
             var str = e.target.result;
@@ -176,8 +190,8 @@ function waitForIO(writer, callback) {
       return;
     }
     if (writer.readyState===writer.WRITING) {
-      console.error("Write operation taking too long, aborting!"+
-        " (current writer readyState is "+writer.readyState+")");
+        console.error('Write operation taking too long, aborting!' +
+            ' (current writer readyState is ' + writer.readyState + ')');
       writer.abort();
     }
     else {
@@ -259,8 +273,10 @@ $(function() {
                 waitForIO(writer, function() {
                     writer.seek(0);
                     writer.write(blob);
-                    showStatus('Saved!');
+                    showStatus(gettext('saved'));
                 });
+            }, function() {
+                showStatus(gettext('saveFileFailed'));
             });
 
         });

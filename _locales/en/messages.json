@@ -1,0 +1,41 @@
+{
+    "dragAndDrop": {
+        "message": "Drag and drop or "
+    },
+    "selectFile": {
+        "message": "select file"
+    },
+    "loading": {
+        "message": "Loading..."
+    },
+    "loadFileFailed": {
+        "message": "Failed to load file"
+    },
+    "saved": {
+        "message": "Saved!"
+    },
+    "saveFileFailed": {
+        "message": "Failed to save file"
+    },
+    "clear": {
+        "message": "Clear"
+    },
+    "reselect": {
+        "message": "Reselect"
+    },
+    "from": {
+        "message": "From"
+    },
+    "to": {
+        "message": "To"
+    },
+    "traditional": {
+        "message": "Traditional"
+    },
+    "simplified": {
+        "message": "Simplified"
+    },
+    "saveAs": {
+        "message": "Save as..."
+    }
+}

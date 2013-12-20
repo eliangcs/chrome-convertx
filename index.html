@@ -15,14 +15,14 @@
 <div class="dropzone">
   <div class="path"></div>
   <div class="nav">
-    <a class="clear" href="#">Clear</a>
-    <a class="select-file" href="#">Reselect</a>
+    <a class="clear gettext" href="#">clear</a>
+    <a class="select-file gettext" href="#">reselect</a>
   </div>
 </div>
 
 <div class="row">
   <div class="col-xs-6 from-col">
-    <h4>From</h4>
+    <h4 class="gettext">from</h4>
     <select class="form-control select-encoding" id="encoding-from" disabled>
       <option value="big5">Big5</option>
       <option value="gbk">GBK</option>
@@ -35,7 +35,7 @@
   </div>
 
   <div class="col-xs-6 to-col">
-    <h4>To</h4>
+    <h4 class="gettext">to</h4>
     <select class="form-control select-encoding" id="encoding-to" disabled>
       <option value="big5">Big5</option>
       <option value="gbk">GBK</option>
@@ -44,13 +44,13 @@
       <option value="utf8">UTF-8</option>
     </select>
     <label class="radio-inline">
-      <input type="radio" id="trad" name="glyph" value="trad" disabled> Traditional
+      <input type="radio" id="trad" name="glyph" value="trad" disabled> <span class="gettext">traditional</span>
     </label>
     <label class="radio-inline">
-      <input type="radio" id="simp" name="glyph" value="simp" disabled> Simplified
+      <input type="radio" id="simp" name="glyph" value="simp" disabled> <span class="gettext">simplified</span>
     </label>
     <textarea class="form-control preview" id="preview-to" readonly></textarea>
-    <button id="save-as" type="button" class="btn btn-block btn-primary" disabled>Save as...</button>
+    <button id="save-as" type="button" class="btn btn-block btn-primary gettext" disabled>saveAs</button>
   </div>
 </div>
 

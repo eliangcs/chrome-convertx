@@ -88,7 +88,7 @@ module.exports = function(grunt) {
 
     // Default task(s).
     grunt.registerTask('default', [
-        'checkversion', 'clean', 'shell:browserify', 'uglify', 'htmlmin', 'cssmin', 'compress'
+        'checkversion', 'clean', 'uglify', 'htmlmin', 'cssmin', 'compress'
     ]);
 
 };

@@ -1,20 +1,25 @@
 {
-    "name": "ConvertX",
-    "description": "Chinese encoding converter.",
     "manifest_version": 2,
-    "minimum_chrome_version": "23",
+    "name": "ConvertX",
+    "description": "Chinese encoding converter",
     "version": "0.9.0",
+    "author": "Chang-Hung Liang <eliang.cs@gmail.com>",
+
+    "minimum_chrome_version": "23",
+    "default_locale": "en",
     "offline_enabled": true,
-    "default_locale": "zh_CN",
+
     "app": {
         "background": {
             "scripts": ["background.js"]
         }
     },
+
     "permissions" : [
         { "fileSystem": ["write"] },
         "storage"
     ],
+
     "icons": {
         "16": "icon_16.png",
         "128": "icon_128.png"

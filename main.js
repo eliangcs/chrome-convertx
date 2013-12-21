@@ -34,15 +34,26 @@ function updateGlyphRadios(encoding, glyph) {
 function handleDragOver(evt) {
     evt.stopPropagation();
     evt.preventDefault();
-    console.log('drag');
+    $('#dropzone').addClass('over');
+}
+
+function handleDragLeave(evt) {
+    evt.stopPropagation();
+    evt.preventDefault();
+    $('#dropzone').removeClass('over');
 }
 
 function handleDrop(evt) {
     evt.stopPropagation();
     evt.preventDefault();
 
-    var files = evt.dataTransfer.files;
-    console.log(files);
+    var entry;
+    if (evt.dataTransfer.items.length > 0) {
+        entry = evt.dataTransfer.items[0].webkitGetAsEntry();
+        loadFile(entry);
+    }
+
+    $('#dropzone').removeClass('over');
 }
 
 function initUI() {
@@ -57,8 +68,9 @@ function initUI() {
     setPath();
 
     var dropzone = document.getElementById('dropzone');
-    dropzone.addEventListener('dragover', handleDragOver, false);
     dropzone.addEventListener('drop', handleDrop, false);
+    dropzone.addEventListener('dragover', handleDragOver, true);
+    dropzone.addEventListener('dragleave', handleDragLeave, true);
 
     // translate
     $('.gettext').each(function() {

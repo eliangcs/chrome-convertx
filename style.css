@@ -13,16 +13,20 @@ body {
   background: #eee;
 }
 
+#dropzone.over {
+  background: #ffd;
+}
+
 h4 {
   font-weight: bold;
 }
 
-.dropzone .nav {
+#dropzone .nav {
   margin-top: 5px;
   text-align: right;
 }
 
-.dropzone .nav a {
+#dropzone .nav a {
   margin-left: 5px;
 }
 

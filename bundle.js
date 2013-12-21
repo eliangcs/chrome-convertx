@@ -145,6 +145,7 @@ function loadFile(entry) {
     showStatus(gettext('loading'));
 
     chrome.fileSystem.getDisplayPath(entry, setPath);
+    filename = entry.name;
 
     entry.file(function(file) {
         var reader = new FileReader();
@@ -242,7 +243,6 @@ $(function() {
         chrome.fileSystem.chooseEntry({}, function(entry) {
             if (entry) {
                 loadFile(entry);
-                filename = entry.name;
             }
         });
     });

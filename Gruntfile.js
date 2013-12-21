@@ -74,9 +74,21 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-shell');
 
+    grunt.registerTask('checkversion', 'Check version', function() {
+        var manifest = grunt.file.readJSON('manifest.json');
+        var pkg = grunt.config.get('pkg');
+        if (manifest.version !== pkg.version) {
+            console.error('Versions in manifest.json and package.json must be the same! ' +
+                '(' + manifest.version + ' !== ' +  pkg.version + ')');
+            return false;
+        }
+        console.log('Version: ' + pkg.version);
+        return true;
+    });
+
     // Default task(s).
     grunt.registerTask('default', [
-        'clean', 'shell:browserify', 'uglify', 'htmlmin', 'cssmin', 'compress'
+        'checkversion', 'clean', 'shell:browserify', 'uglify', 'htmlmin', 'cssmin', 'compress'
     ]);
 
 };

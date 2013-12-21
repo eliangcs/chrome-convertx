@@ -1,4 +1,7 @@
 {
+    "appDesc": {
+        "message": "Chinese encoding converter"
+    },
     "dragAndDrop": {
         "message": "Drag and drop or "
     },

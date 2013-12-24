@@ -233,6 +233,12 @@ function waitForIO(writer, callback) {
   setTimeout(reentrant, 100);
 }
 
+function updatePreviewTo(text) {
+    var glyph = $('input[name="glyph"]:checked').val();
+    var newText = toGlyph(text, glyph);
+    $('#preview-to').val(newText);
+}
+
 $(function() {
 
     initUI();
@@ -260,6 +266,8 @@ $(function() {
         } else {
             $preview.removeClass('unicode');
         }
+
+        updatePreviewTo(text);
     });
 
     $('#encoding-to').change(function() {
@@ -277,10 +285,8 @@ $(function() {
     });
 
     $('input[name="glyph"]').click(function() {
-        var glyph = $('input[name="glyph"]:checked').val();
         var text = $('#preview-from').val();
-        text = toGlyph(text, glyph);
-        $('#preview-to').val(text);
+        updatePreviewTo(text);
 
         chrome.storage.sync.set({ glyph: glyph });
     });

@@ -1,6 +1,6 @@
 {
   "name": "chrome-convertx",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "description": "Chinese encoding converter",
   "main": "main.js",
   "dependencies": {

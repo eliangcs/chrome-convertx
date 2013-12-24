@@ -287,6 +287,7 @@ $(function() {
         var text = $('#preview-from').val();
         updatePreviewTo(text);
 
+        var glyph = $('input[name="glyph"]:checked').val();
         chrome.storage.sync.set({ glyph: glyph });
     });
 

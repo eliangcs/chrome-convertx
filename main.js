@@ -48,9 +48,12 @@ function handleDrop(evt) {
     evt.preventDefault();
 
     var entry;
-    if (evt.dataTransfer.items.length > 0) {
-        entry = evt.dataTransfer.items[0].webkitGetAsEntry();
-        loadFile(entry);
+    for (var i = 0; i < evt.dataTransfer.items.length; i++) {
+        if (evt.dataTransfer.items[i].kind === 'file') {
+            entry = evt.dataTransfer.items[i].webkitGetAsEntry();
+            loadFile(entry);
+            break;
+        }
     }
 
     $(this).removeClass('over');

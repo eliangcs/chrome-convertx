@@ -181,7 +181,7 @@ function loadFile(entry) {
                 }
             }
 
-            var text = candidates[bestEncoding].substring(0, 1000);
+            var text = candidates[bestEncoding].substring(0, 100000);
 
             chrome.storage.sync.get('glyph', function(items) {
                 var glyph = items.glyph || 'simp';

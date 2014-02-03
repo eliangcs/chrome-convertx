@@ -1,19 +1,20 @@
 {
   "name": "chrome-convertx",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "description": "Chinese encoding converter",
   "main": "main.js",
   "dependencies": {
-    "iconv-lite": "~0.2.11"
+    "iconv-lite": "eliangcs/iconv-lite"
   },
   "devDependencies": {
     "grunt": "~0.4.2",
-    "grunt-contrib-uglify": "~0.2.7",
-    "grunt-contrib-compress": "~0.5.3",
     "grunt-contrib-clean": "~0.5.0",
-    "grunt-shell": "~0.6.1",
+    "grunt-contrib-compress": "~0.5.3",
+    "grunt-contrib-cssmin": "~0.7.0",
     "grunt-contrib-htmlmin": "~0.1.3",
-    "grunt-contrib-cssmin": "~0.7.0"
+    "grunt-contrib-uglify": "~0.2.7",
+    "grunt-shell": "~0.6.1",
+    "browserify": "eliangcs/node-browserify"
   },
   "scripts": {
     "test": "grunt"

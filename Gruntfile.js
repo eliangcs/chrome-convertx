@@ -4,16 +4,20 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
 
+        browserify: {
+            build: {
+                files: {
+                    'bundle.js': ['main.js']
+                },
+                options: {
+                    'alias': ['native-buffer-browserify:buffer']
+                }
+            }
+        },
+
         clean: {
             build: ['build'],
             dist: ['dist']
-        },
-
-        shell: {
-            browserify: {
-                options: { stdout: true },
-                command: './node_modules/.bin/browserify main.js -o bundle.js'
-            }
         },
 
         uglify: {
@@ -67,12 +71,12 @@ module.exports = function(grunt) {
         }
     });
 
+    grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-htmlmin');
     grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-shell');
 
     grunt.registerTask('checkversion', 'Check version', function() {
         var manifest = grunt.file.readJSON('manifest.json');
@@ -86,11 +90,13 @@ module.exports = function(grunt) {
         return true;
     });
 
-    grunt.registerTask('browserify', ['shell:browserify']);
-
-    // Default task(s).
-    grunt.registerTask('default', [
+    grunt.registerTask('package', [
         'checkversion', 'clean', 'uglify', 'htmlmin', 'cssmin', 'compress'
+    ]);
+
+    // Default task(s)
+    grunt.registerTask('default', [
+        'browserify', 'package'
     ]);
 
 };

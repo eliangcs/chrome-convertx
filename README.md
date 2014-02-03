@@ -40,7 +40,7 @@ dependencies:
 
 Generate a ZIP file that is ready to publish on Chrome App Store:
 
-    grunt
+    grunt package
 
 The ZIP file will be created in `dist` directory.
 

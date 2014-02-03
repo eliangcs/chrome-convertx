@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "ConvertX",
     "description": "__MSG_appDesc__",
-    "version": "0.9.2",
+    "version": "0.9.3",
     "author": "Chang-Hung Liang <eliang.cs@gmail.com>",
 
     "minimum_chrome_version": "23",

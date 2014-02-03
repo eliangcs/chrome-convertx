@@ -12,7 +12,7 @@ module.exports = function(grunt) {
         shell: {
             browserify: {
                 options: { stdout: true },
-                command: 'browserify main.js -o bundle.js'
+                command: './node_modules/.bin/browserify main.js -o bundle.js'
             }
         },
 
@@ -85,6 +85,8 @@ module.exports = function(grunt) {
         console.log('Version: ' + pkg.version);
         return true;
     });
+
+    grunt.registerTask('browserify', ['shell:browserify']);
 
     // Default task(s).
     grunt.registerTask('default', [

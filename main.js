@@ -96,9 +96,10 @@ function clearUI() {
     showStatus('');
 }
 
-/*function showLoading(msg) {
+function showLoading(msg) {
+    msg = msg || '';
     $('.status').html('<span class="icon-loading"></span> <span>' + msg + '</span>');
-}*/
+}
 
 function showStatus(msg) {
     $('.status').html('<span>' + msg + '</span>');
@@ -149,7 +150,7 @@ function setPath(path) {
 }
 
 function loadFile(entry) {
-    showStatus(gettext('loading'));
+    showLoading(gettext('loading'));
 
     chrome.fileSystem.getDisplayPath(entry, setPath);
     filename = entry.name;

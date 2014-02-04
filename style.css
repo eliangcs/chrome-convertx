@@ -72,10 +72,6 @@ h4 {
   text-align: right;
 }
 
-.status img {
-  vertical-align: middle;
-}
-
 .status span {
   vertical-align: middle;
 }
@@ -91,5 +87,11 @@ h4 {
   display: inline-block;
   width: 24px;
   height: 24px;
-  background: url(loading.gif) no-repeat;
+  background: url(loading.png) no-repeat;
+  -webkit-animation: play .8s infinite linear;
+}
+
+@-webkit-keyframes play {
+    from {-webkit-transform: rotate(0deg);}
+    to   {-webkit-transform: rotate(359deg);}
 }

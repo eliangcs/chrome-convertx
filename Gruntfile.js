@@ -62,7 +62,8 @@ module.exports = function(grunt) {
                             'jquery.min.js',
                             'manifest.json',
                             'icon_16.png',
-                            'icon_128.png'
+                            'icon_128.png',
+                            'loading.png'
                         ],
                         dest: ''
                     }

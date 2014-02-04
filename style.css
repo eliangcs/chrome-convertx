@@ -4,13 +4,20 @@ body {
   background: #ddd;
 }
 
+#dropzone-container {
+  display: table;
+  width: 100%;
+}
+
 #dropzone {
-  padding: 23px 5px 0 5px;
   border: 2px dotted #aaa;
   text-align: center;
   height: 70px;
   margin-bottom: 7px;
   background: #eee;
+  position: relative;
+  display: table-cell;
+  vertical-align: middle;
 }
 
 #dropzone.over {
@@ -22,8 +29,9 @@ h4 {
 }
 
 #dropzone .nav {
-  margin-top: 5px;
-  text-align: right;
+  position: absolute;
+  right: 5px;
+  bottom: 2px;
 }
 
 #dropzone .nav a {
